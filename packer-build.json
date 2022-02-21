@@ -69,7 +69,8 @@
         {
             "type": "shell",
             "environment_vars": [
-                "api_token={{user `ah_api_token`}}"
+                "api_token={{user `ah_api_token`}}",
+                "satellite_manifest={{user `satellite_manifest_url`}}"
               ],
             "script": "./provisioners/scripts/bootstrap.sh"
         },
