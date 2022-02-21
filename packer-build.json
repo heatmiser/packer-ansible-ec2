@@ -67,6 +67,11 @@
             "destination": "/home/{{user `ssh_username`}}/.ansible.cfg"
         },
         {
+            "type": "file",
+            "source": "provisioners/ansible/vars/sat_repos.yml",
+            "destination": "/tmp/sat_repos.yml"
+        },
+        {
             "type": "shell",
             "environment_vars": [
                 "LANG=en_US.UTF-8",
@@ -78,7 +83,7 @@
         },
         {
             "type": "ansible-local",
-            "command": "./provisioners/scripts/venv_wrapper.sh",
+            "command": "/tmp/venv_wrapper.sh",
             "playbook_file": "./provisioners/ansible/setup-server.yml",
             "extra_arguments": [
                 "--extra-vars",
