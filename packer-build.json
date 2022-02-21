@@ -69,6 +69,8 @@
         {
             "type": "shell",
             "environment_vars": [
+                "LANG=en_US.UTF-8",
+                "LC_ALL=en_US.UTF-8",
                 "api_token={{user `ah_api_token`}}",
                 "satellite_manifest={{user `satellite_manifest_url`}}"
               ],
