@@ -16,17 +16,16 @@ Requirements
 Configuration
 ------------
 1) Clone this repo to local system
-2) *cd* to the `packer-ansible-ec2` directory and then `git checkout` the build branch of interest e.g. `git checkout satellite-6.10`
+2) *cd* to the `packer-ansible-ec2` directory and then `git checkout` the build branch of interest e.g. `git checkout rhel-8-aarch64`
 3) Either edit `packer-build.json` directly or copy to new json file and edit new file  
 <tab>modify the following variables:
-* `ami_name`: "Satellite 6.10 {{isotime `2006-01-02-150405`}}" (default AMI name will include time stamp of build launch)
+* `ami_name`: "RHEL 8 aarch64 {{isotime `2006-01-02-150405`}}" (default AMI name will include time stamp of build launch)
 * `aws_region`: EC2 region where temporary build instance will run, ie `us-east-1`
 * `vpc_id`: VPC ID that exists in the region specified above
 * `subnet_id`: Subnet ID that exists within above VPC
-* `red_hat_activation_key`: Red Hat Activation key that contains valid subscriptions for products being installed e.g. Red Hat Satellite
+* `red_hat_activation_key`: Red Hat Activation key that contains valid subscriptions for products being installed e.g. Red Hat Enterprise Linux 8 for ARM 64 
 * `red_hat_org_id`: Red Hat organization ID for account that owns above activation key
-* `ah_api_token`: [Red Hat Automation Hub API token](https://access.redhat.com/management/api)
-* `satellite_manifest_url`: Red Hat product subscription manifest location accessible by the temporary EC2 builder instance (if required by product installation and/or configuration). Generate manifest [here](https://access.redhat.com/management/subscription_allocations) and then move to specified URL location
+* `ah_api_token`: [Red Hat Automation Hub API token](https://access.redhat.com/management/api) (If you need to utilize any Red Hat-provided Ansible collections)
 
 EBS AMI Build
 -------------
