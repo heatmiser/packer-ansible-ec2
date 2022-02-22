@@ -74,7 +74,7 @@ collections:
   - name: netapp.aws
   - name: netapp.azure
   - name: netapp.cloudmanager
-  - name: netapp.elementsw---
+  - name: netapp.elementsw
   - name: netapp.ontap
   - name: netapp.storagegrid
   - name: netapp.um_info
