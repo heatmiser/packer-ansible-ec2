@@ -2,7 +2,6 @@
 set -ex
 
 sed -i "s/AABBccddeeff112233gghh/$api_token/g" ~/.ansible.cfg
-curl -L $satellite_manifest -o /tmp/manifest.zip
 
 #sudo yum -y install git
 #curl https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm -o /tmp/epel-release-latest-7.noarch.rpm
@@ -11,21 +10,27 @@ curl -L $satellite_manifest -o /tmp/manifest.zip
 #sudo yum remove -y epel-release
 #rm /tmp/epel-release-latest-7.noarch.rpm
 
-sudo yum-config-manager --enable rhel-7-server-rhui-optional-rpms
-sudo yum-config-manager --enable rhel-server-rhui-rhscl-7-rpms
 sudo yum -y install @development
-sudo yum -y install rh-python36
-#scl enable rh-python36 bash ### doesn't work within a bash script
-source /opt/rh/rh-python36/enable
 export PYVENV_PROJDIR="/tmp/ansible_venv"
 mkdir -p $PYVENV_PROJDIR
-python3.6 -m pip install --user --upgrade pip setuptools
-python3.6 -m venv $PYVENV_PROJDIR
+/usr/libexec/platform-python -m venv $PYVENV_PROJDIR
 source $PYVENV_PROJDIR/bin/activate
-python3.6 -m pip install --upgrade pip setuptools
-python3.6 -m pip install wheel
-python3.6 -m pip install \
-   ansible==2.9.27 \
-   jmespath
+python3 -m pip install --upgrade pip setuptools
+python3 -m pip install wheel
+python3 -m pip install \
+    ansible-core==2.11.7 \
+    awscli==1.22.49 \
+    boto3==1.20.49 \
+    boto==2.49.0 \
+    invoke==1.6.0 \
+    jmespath==0.10.0 \
+    netaddr==0.8.0 \
+    passlib==1.7.4 \
+    python_terraform==0.10.1 \
+    pywinrm==0.4.2 \
+    requests==2.27.1 \
+    requests-credssp==2.0.0 \
+    tox==3.22.0 \
+    yamllint==1.26.3
 ansible-galaxy collection install -r /tmp/requirements.yml --force
 history -c
