@@ -2,22 +2,21 @@
     "variables": {
         "aws_access_key": "{{env `AWS_ACCESS_KEY_ID`}}",
         "aws_secret_key": "{{env `AWS_SECRET_ACCESS_KEY`}}",
-        "ami_name": "Satellite 6.10 {{isotime `2006-01-02-150405`}}",
+        "ami_name": "RHEL 8 aarch64 {{isotime `2006-01-02-150405`}}",
         "aws_region": "us-east-2",
         "ssh_username": "ec2-user",
         "vpc_id": "EXISTING-VPC-ID",
         "subnet_id": "EXISTING-SUBNET-ID",
-        "red_hat_activation_key": "AK-Sat",
+        "red_hat_activation_key": "rhel-key",
         "red_hat_org_id": "12345678",
-        "ah_api_token": "00998877665544332211",
-        "satellite_manifest_url": "http://some.location.dom/manifest.zip"
+        "ah_api_token": "00998877665544332211"
     },
     "builders": [{
         "type": "amazon-ebs",
         "access_key": "{{user `aws_access_key`}}",
         "secret_key": "{{user `aws_secret_key`}}",
         "region": "{{user `aws_region`}}",
-        "instance_type": "r5a.xlarge",
+        "instance_type": "m6g.medium",
         "ebs_optimized": "true",
         "force_deregister": "true",
         "ssh_username": "{{user `ssh_username`}}",
@@ -28,7 +27,7 @@
         "source_ami_filter": {
             "filters": {
                 "virtualization-type": "hvm",
-                "name": "RHEL_HA-7.9_HVM-*-x86_64-2-Hourly2-GP2",
+                "name": "RHEL-8.4.0_HVM-*-arm64-2-Hourly2-GP2",
                 "root-device-type": "ebs"
             },
             "owners": ["309956199498"],
@@ -37,14 +36,14 @@
         "launch_block_device_mappings": [
             {
                "device_name": "/dev/sda1",
-               "volume_size": "500",
+               "volume_size": "20",
                "volume_type": "gp3",
-               "iops": "5000",
-               "throughput": "1000"
+               "iops": "3000",
+               "throughput": "125"
             }
           ],
         "run_tags": {
-            "Name": "packer-satellite-image"
+            "Name": "packer-rhel8-arm64-image"
         }
     }],
     "provisioners": [{
@@ -68,16 +67,15 @@
         },
         {
             "type": "file",
-            "source": "provisioners/ansible/vars/sat_repos.yml",
-            "destination": "/tmp/sat_repos.yml"
+            "source": "provisioners/ansible/vars/rhel_config.yml",
+            "destination": "/tmp/rhel_config.yml"
         },
         {
             "type": "shell",
             "environment_vars": [
                 "LANG=en_US.UTF-8",
                 "LC_ALL=en_US.UTF-8",
-                "api_token={{user `ah_api_token`}}",
-                "satellite_manifest={{user `satellite_manifest_url`}}"
+                "api_token={{user `ah_api_token`}}"
               ],
             "script": "./provisioners/scripts/bootstrap.sh"
         },
@@ -87,7 +85,7 @@
             "playbook_file": "./provisioners/ansible/setup-server.yml",
             "extra_arguments": [
                 "--extra-vars",
-                "\"org_id={{user `red_hat_org_id`}} satellite_activation_key={{user `red_hat_activation_key`}}\""
+                "\"org_id={{user `red_hat_org_id`}} rhel_activation_key={{user `red_hat_activation_key`}}\""
               
               ]
         }
