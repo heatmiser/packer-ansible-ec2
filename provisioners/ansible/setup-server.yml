@@ -126,7 +126,7 @@
           stream=2.7
           profiles=
           state=enabled
-    - name: Enable satellite module
+    - name: Enable satellite dnf module
       copy:
         dest: /etc/dnf/modules.d/satellite.module
         content: |
@@ -144,7 +144,7 @@
       name: "*"
       state: latest
 
-  - name: installer package
+  - name: install satellite package
     yum:
       name: satellite
       state: latest
