@@ -70,15 +70,66 @@
   - name: installer repos
     rhsm_repository:
       name:
-        - rhel-server-rhscl-7-rpms
-        - rhel-7-server-satellite-maintenance-6-rpms
-        - rhel-7-server-satellite-6.10-rpms
-        - rhel-7-server-rpms
-        - rhel-7-server-ansible-2.9-rpms
+        - rhel-8-for-x86_64-baseos-rpms
+        - rhel-8-for-x86_64-appstream-rpms
+        - satellite-6.11-for-rhel-8-x86_64-rpms
+        - satellite-maintenance-6.11-for-rhel-8-x86_64-rpms
+        - ansible-2.9-for-rhel-8-x86_64-rpms
       state: enabled
       purge: yes
     tags:
       - pre_task
+
+  - name: Perform equivalent of ==> dnf module enable satellite:el8
+    block:
+    - name: Enable pki-core dnf module
+      copy:
+        dest: /etc/dnf/modules.d/pki-core.module
+        content: |
+          [pki-core]
+          name=pki-core
+          stream=10.6
+          profiles=
+          state=enabled
+    - name: Enable pki-deps dnf module
+      copy:
+        dest: /etc/dnf/modules.d/pki-deps.module
+        content: |
+          [pki-deps]
+          name=pki-deps
+          stream=10.6
+          profiles=
+          state=enabled
+    - name: Enable postgresql dnf module
+      copy:
+        dest: /etc/dnf/modules.d/postgresql.module
+        content: |
+          [postgresql]
+          name=postgresql
+          stream=12
+          profiles=
+          state=enabled
+    - name: Enable ruby dnf module
+      copy:
+        dest: /etc/dnf/modules.d/ruby.module
+        content: |
+          [ruby]
+          name=ruby
+          stream=2.7
+          profiles=
+          state=enabled
+    - name: Enable satellite module
+      copy:
+        dest: /etc/dnf/modules.d/satellite.module
+        content: |
+          [satellite]
+          name=satellite
+          stream=el8
+          profiles=
+          state=enabled
+    when: 
+      - ansible_os_family == 'RedHat'
+      - ansible_distribution_major_version | int >= 8
 
   - name: Update all packages
     yum:

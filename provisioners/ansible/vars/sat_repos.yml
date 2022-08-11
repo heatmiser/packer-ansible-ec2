@@ -19,7 +19,7 @@ satellite_products:
         releasever: 8
       - name: Red Hat Enterprise Linux 8 for x86_64 - AppStream (RPMs)
         releasever: 8
-      - name: Red Hat Satellite Tools 6.10 for RHEL 8 x86_64 (RPMs)
+      - name: Red Hat Satellite Tools 6.11 for RHEL 8 x86_64 (RPMs)
   - name: Red Hat Enterprise Linux Server
     repository_sets:
       - name: Red Hat Enterprise Linux 7 Server (RPMs)
@@ -27,7 +27,7 @@ satellite_products:
         releasever: 7Server
       - name: Red Hat Enterprise Linux 7 Server - Extras (RPMs)
         basearch: x86_64
-      - name: Red Hat Satellite Tools 6.10 (for RHEL 7 Server) (RPMs)
+      - name: Red Hat Satellite Tools 6.11 (for RHEL 7 Server) (RPMs)
         basearch: x86_64
   - name: Community Enterprise OS 7
     repositories:

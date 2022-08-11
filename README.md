@@ -16,10 +16,10 @@ Requirements
 Configuration
 ------------
 1) Clone this repo to local system
-2) *cd* to the `packer-ansible-ec2` directory and then `git checkout` the build branch of interest e.g. `git checkout satellite-6.10`
+2) *cd* to the `packer-ansible-ec2` directory and then `git checkout` the build branch of interest e.g. `git checkout satellite-6.11`
 3) Either edit `packer-build.json` directly or copy to new json file and edit new file  
 <tab>modify the following variables:
-* `ami_name`: "Satellite 6.10 {{isotime `2006-01-02-150405`}}" (default AMI name will include time stamp of build launch)
+* `ami_name`: "Satellite 6.11 {{isotime `2006-01-02-150405`}}" (default AMI name will include time stamp of build launch)
 * `aws_region`: EC2 region where temporary build instance will run, ie `us-east-1`
 * `vpc_id`: VPC ID that exists in the region specified above
 * `subnet_id`: Subnet ID that exists within above VPC
