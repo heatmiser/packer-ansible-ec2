@@ -58,12 +58,20 @@
     tags:
       - pre_task
 
-  - name: subscription manager
+  - name: subscription manager - register system
     redhat_subscription:
       state: present
       activationkey: "{{ satellite_activation_key }}"
       org_id: "{{ org_id }}"
       pool: '^Red Hat Satellite Infrastructure^$'
+    tags:
+      - pre_task
+
+  - name: enable repositories
+    ansible.builtin.lineinfile:
+      path: /etc/rhsm/rhsm.conf
+      regexp: '^manage_repos ='
+      line: manage_repos = 1
     tags:
       - pre_task
 
