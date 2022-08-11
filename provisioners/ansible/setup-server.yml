@@ -63,7 +63,7 @@
       state: present
       activationkey: "{{ satellite_activation_key }}"
       org_id: "{{ org_id }}"
-      auto_attach: true
+      pool: '^Red Hat Satellite Infrastructure^$'
     tags:
       - pre_task
 
