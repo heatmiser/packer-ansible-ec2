@@ -28,7 +28,7 @@
         "source_ami_filter": {
             "filters": {
                 "virtualization-type": "hvm",
-                "name": "RHEL_HA-8.6.*_HVM-*-x86_64-2-Access2-GP2",
+                "name": "RHEL-8.6.*_HVM-*-x86_64-2-Hourly2-GP2",
                 "root-device-type": "ebs"
             },
             "owners": ["309956199498"],
