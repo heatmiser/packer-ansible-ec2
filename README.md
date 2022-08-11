@@ -25,7 +25,7 @@ Configuration
 * `subnet_id`: Subnet ID that exists within above VPC
 * `red_hat_activation_key`: Red Hat Activation key that contains valid subscriptions for products being installed e.g. Red Hat Satellite
 * `red_hat_org_id`: Red Hat organization ID for account that owns above activation key
-* `ah_api_token`: [Red Hat Automation Hub API token](https://access.redhat.com/management/api)
+* `ah_api_token`: [Red Hat Automation Hub API token](https://console.redhat.com/ansible/automation-hub/token)
 * `satellite_manifest_url`: Red Hat product subscription manifest location accessible by the temporary EC2 builder instance (if required by product installation and/or configuration). Generate manifest [here](https://access.redhat.com/management/subscription_allocations) and then move to specified URL location
 
 EBS AMI Build
