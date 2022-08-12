@@ -369,10 +369,11 @@
     until: repo_sync is not failed
 
   # https://projects.theforeman.org/issues/10266
-  - name: disconnected mode
-    command: 'hammer settings set --name content_disconnected --value true'
-    environment:
-      HOME: /root
+  # Commented for 6.11
+  #- name: disconnected mode
+  #  command: 'hammer settings set --name content_disconnected --value true'
+  #  environment:
+  #    HOME: /root
 
   - name: unregister
     redhat_subscription:
