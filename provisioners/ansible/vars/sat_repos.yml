@@ -49,7 +49,7 @@ satellite_products:
         content_type: yum
         url: https://download.fedoraproject.org/pub/epel/7/x86_64/
         mirror_on_sync: no
- - name: Extra Packages for Enterprise Linux 8
+  - name: Extra Packages for Enterprise Linux 8
     repositories:
       - name:  Extra Packages for Enterprise Linux 8 x86_64
         content_type: yum
@@ -60,6 +60,6 @@ satellite_products:
       - name: Foreman Client CentOS 7
         url: https://yum.theforeman.org/client/latest/el7/x86_64/
         content_type: yum
-  - name: Foreman Client CentOS 8
+      - name: Foreman Client CentOS 8
         url: https://yum.theforeman.org/client/latest/el8/x86_64/
         content_type: yum
