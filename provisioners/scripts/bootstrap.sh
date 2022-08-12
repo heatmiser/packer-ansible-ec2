@@ -15,7 +15,7 @@ source $PYVENV_PROJDIR/bin/activate
 python3.9 -m pip install --upgrade pip setuptools
 python3.9 -m pip install wheel
 python3.9 -m pip install \
-   ansible==2.9.27 \
+   ansible-core==2.11.7 \
    jmespath
 ansible-galaxy collection install -r /tmp/requirements.yml --force
 history -c
