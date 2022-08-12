@@ -11,7 +11,7 @@
 
   tasks:
   - name: set SELinux to permissive
-    selinux:
+    ansible.posix.selinux:
       policy: targeted
       state: permissive
     tags:
@@ -59,7 +59,7 @@
       - pre_task
 
   - name: subscription manager - register system
-    redhat_subscription:
+    community.general.redhat_subscription:
       state: present
       activationkey: "{{ satellite_activation_key }}"
       org_id: "{{ org_id }}"
@@ -76,7 +76,7 @@
       - pre_task
 
   - name: installer repos
-    rhsm_repository:
+    community.general.rhsm_repository:
       name:
         - rhel-8-for-x86_64-baseos-rpms
         - rhel-8-for-x86_64-appstream-rpms
@@ -385,7 +385,7 @@
   #    HOME: /root
 
   - name: unregister
-    redhat_subscription:
+    community.general.redhat_subscription:
       state: absent
 
   - name: remove any persistent udev rules
