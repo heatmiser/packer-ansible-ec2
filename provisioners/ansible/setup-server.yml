@@ -252,12 +252,17 @@
      - post_software
 
   # Because of https://bugzilla.redhat.com/show_bug.cgi?id=1779294 ...need to reset where default python points to
-  - name: Set python to /usr/bin/python3.6 via alternatives
-    community.general.alternatives:
-      name: python
-      path: /usr/bin/python3.6
-      link: /usr/bin/python
-      state: present
+  - name: Set python to /usr/bin/python3 via alternatives
+  #  community.general.alternatives:
+  #    name: python
+  #    path: /usr/bin/python3.6
+  #    link: /usr/bin/python
+  #    state: present
+  ### Couldn't get alternative module to work correctly, so reverting to 
+    command: >-
+      alternatives --set python /usr/bin/python3
+    environment:
+      HOME: /root
     tags:
      - post_software
 
