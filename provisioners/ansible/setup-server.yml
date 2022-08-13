@@ -257,6 +257,7 @@
       name: python
       path: /usr/bin/python3.6
       link: /usr/bin/python
+      state: present
     tags:
      - post_software
 
