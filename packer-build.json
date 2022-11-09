@@ -2,22 +2,22 @@
     "variables": {
         "aws_access_key": "{{env `AWS_ACCESS_KEY_ID`}}",
         "aws_secret_key": "{{env `AWS_SECRET_ACCESS_KEY`}}",
-        "ami_name": "Satellite 6.11 {{isotime `2006-01-02-150405`}}",
+        "ami_name": "AAP Controller 2.2 {{isotime `2006-01-02-150405`}}",
         "aws_region": "us-east-2",
         "ssh_username": "ec2-user",
         "vpc_id": "EXISTING-VPC-ID",
         "subnet_id": "EXISTING-SUBNET-ID",
-        "red_hat_activation_key": "AK-Sat",
+        "red_hat_activation_key": "AK-RHEL",
         "red_hat_org_id": "12345678",
         "ah_api_token": "00998877665544332211",
-        "satellite_manifest_url": "http://some.location.dom/manifest.zip"
+        "controller_manifest_url": "http://some.location.dom/manifest.zip"
     },
     "builders": [{
         "type": "amazon-ebs",
         "access_key": "{{user `aws_access_key`}}",
         "secret_key": "{{user `aws_secret_key`}}",
         "region": "{{user `aws_region`}}",
-        "instance_type": "r5a.xlarge",
+        "instance_type": "m4.xlarge",
         "ebs_optimized": "true",
         "force_deregister": "true",
         "ssh_username": "{{user `ssh_username`}}",
@@ -37,14 +37,14 @@
         "launch_block_device_mappings": [
             {
                "device_name": "/dev/sda1",
-               "volume_size": "500",
+               "volume_size": "40",
                "volume_type": "gp3",
                "iops": "5000",
                "throughput": "1000"
             }
           ],
         "run_tags": {
-            "Name": "packer-satellite-image"
+            "Name": "packer-controller-image"
         }
     }],
     "provisioners": [{
@@ -68,8 +68,8 @@
         },
         {
             "type": "file",
-            "source": "provisioners/ansible/vars/sat_repos.yml",
-            "destination": "/tmp/sat_repos.yml"
+            "source": "provisioners/ansible/vars/aap_extra_vars.yml",
+            "destination": "/tmp/aap_extra_vars.yml"
         },
         {
             "type": "shell",
@@ -77,7 +77,7 @@
                 "LANG=en_US.UTF-8",
                 "LC_ALL=en_US.UTF-8",
                 "api_token={{user `ah_api_token`}}",
-                "satellite_manifest={{user `satellite_manifest_url`}}"
+                "controller_manifest={{user `controller_manifest_url`}}"
               ],
             "script": "./provisioners/scripts/bootstrap.sh"
         },
@@ -87,7 +87,7 @@
             "playbook_file": "./provisioners/ansible/setup-server.yml",
             "extra_arguments": [
                 "--extra-vars",
-                "\"org_id={{user `red_hat_org_id`}} satellite_activation_key={{user `red_hat_activation_key`}}\""
+                "\"org_id={{user `red_hat_org_id`}} rhel_activation_key={{user `red_hat_activation_key`}}\""
               
               ]
         }
