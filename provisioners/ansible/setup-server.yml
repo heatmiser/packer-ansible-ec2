@@ -176,6 +176,7 @@
       satellite_installer_scenario: satellite
       satellite_installer_options:
           - "--foreman-initial-admin-password {{ sat_pass }}"
+          - "--enable-foreman-plugin-remote-execution-cockpit"
       satellite_installer_command: satellite-installer
     when:
       - satellite_status.stdout is defined
