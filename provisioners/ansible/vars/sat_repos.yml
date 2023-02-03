@@ -12,14 +12,30 @@ validate_certs: false
 
 satellite_manifest_path: "/tmp/manifest.zip"
 
+# from: https://opendev.org/openstack/tripleo-heat-templates/commit/6dde10a5235c0be3dc0fe305c5bb58f6b8fae697
+#dnf_module_list:
+#    description: List of streams to be configured before updating packages. Each list
+#                 element contains a dictionary with the following values defined
+#                 module[mandatory], stream[mandatory] and profile[optional]. If the profile
+#                 is not specified 'common' will be used instead.
+#    type: json
+dnf_module_list: [{'module':'satellite', 'stream':'el8'}]
+
 satellite_products:
+  - name: Red Hat Enterprise Linux for x86_64
+    repository_sets:
+      - name: Red Hat Enterprise Linux 9 for x86_64 - BaseOS (RPMs)
+        releasever: 9
+      - name: Red Hat Enterprise Linux 9 for x86_64 - AppStream (RPMs)
+        releasever: 9
+      - name: Red Hat Satellite Client 6 for RHEL 9 x86_64 (RPMs)
   - name: Red Hat Enterprise Linux for x86_64
     repository_sets:
       - name: Red Hat Enterprise Linux 8 for x86_64 - BaseOS (RPMs)
         releasever: 8
       - name: Red Hat Enterprise Linux 8 for x86_64 - AppStream (RPMs)
         releasever: 8
-      - name: Red Hat Satellite Utils 6.11 for RHEL 8 x86_64 (RPMs)
+      - name: Red Hat Satellite Utils 6.12 for RHEL 8 x86_64 (RPMs)
       - name: Red Hat Satellite Client 6 for RHEL 8 x86_64 (RPMs)
   - name: Red Hat Enterprise Linux Server
     repository_sets:
@@ -27,8 +43,6 @@ satellite_products:
         basearch: x86_64
         releasever: 7Server
       - name: Red Hat Enterprise Linux 7 Server - Extras (RPMs)
-        basearch: x86_64
-      - name: Red Hat Satellite Utils 6.11 (for RHEL 7 Server) (RPMs)
         basearch: x86_64
       - name: Red Hat Satellite Client 6 (for RHEL 7 Server) (RPMs)
         basearch: x86_64
@@ -63,3 +77,7 @@ satellite_products:
       - name: Foreman Client CentOS 8
         url: https://yum.theforeman.org/client/latest/el8/x86_64/
         content_type: yum
+      - name: Foreman Client CentOS 9
+        url: https://yum.theforeman.org/client/latest/el9/x86_64/
+        content_type: yum
+
