@@ -3,14 +3,15 @@
         "aws_access_key": "{{env `AWS_ACCESS_KEY_ID`}}",
         "aws_secret_key": "{{env `AWS_SECRET_ACCESS_KEY`}}",
         "ami_name": "Satellite 6.12 {{isotime `2006-01-02-150405`}}",
-        "aws_region": "us-east-2",
+        "aws_region": "us-east-1",
         "ssh_username": "ec2-user",
-        "vpc_id": "EXISTING-VPC-ID",
-        "subnet_id": "EXISTING-SUBNET-ID",
+        "vpc_id": "_YOUR_AWS_VPC_ID_",
+        "subnet_id": "_YOUR_AWS_PUBLIC_SUBNET_ID_",
         "red_hat_activation_key": "AK-Sat",
-        "red_hat_org_id": "12345678",
-        "ah_api_token": "00998877665544332211",
-        "satellite_manifest_url": "http://some.location.dom/manifest.zip"
+        "red_hat_org_id": "_YOUR_RED_HAT_ORG_ID_",
+        "ah_api_token": "_YOUR_RED_HAT_AUTOMATION_HUB_API_TOKEN_",
+        "download_program": "curl",
+        "satellite_manifest_url": "_HTTP_OR_S3_ADDRESS_"
     },
     "builders": [{
         "type": "amazon-ebs",
@@ -28,7 +29,7 @@
         "source_ami_filter": {
             "filters": {
                 "virtualization-type": "hvm",
-                "name": "RHEL-8.7.*_HVM-*-x86_64-2-Hourly2-GP2",
+		"name": "RHEL-8.7.*_HVM-*-x86_64-*",
                 "root-device-type": "ebs"
             },
             "owners": ["309956199498"],
@@ -76,7 +77,10 @@
             "environment_vars": [
                 "LANG=en_US.UTF-8",
                 "LC_ALL=en_US.UTF-8",
+                "AWS_ACCESS_KEY_ID={{user `aws_access_key`}}",
+                "AWS_SECRET_ACCESS_KEY={{user `aws_secret_key`}}",
                 "api_token={{user `ah_api_token`}}",
+                "download_program={{user `download_program`}}",
                 "satellite_manifest={{user `satellite_manifest_url`}}"
               ],
             "script": "./provisioners/scripts/bootstrap.sh"
