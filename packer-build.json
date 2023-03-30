@@ -3,14 +3,14 @@
         "aws_access_key": "{{env `AWS_ACCESS_KEY_ID`}}",
         "aws_secret_key": "{{env `AWS_SECRET_ACCESS_KEY`}}",
         "ami_name": "Satellite 6.12 {{isotime `2006-01-02-150405`}}",
-        "aws_region": "us-east-2",
+        "aws_region": "us-east-1",
         "ssh_username": "ec2-user",
-        "vpc_id": "EXISTING-VPC-ID",
-        "subnet_id": "EXISTING-SUBNET-ID",
+        "vpc_id": "vpc-08faa4d81d2869fad",
+        "subnet_id": "subnet-01183895c8f22f4c2",
         "red_hat_activation_key": "AK-Sat",
-        "red_hat_org_id": "12345678",
-        "ah_api_token": "00998877665544332211",
-        "satellite_manifest_url": "http://some.location.dom/manifest.zip"
+        "red_hat_org_id": "16124522",
+        "ah_api_token": "eyJhbGciOiJIUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJhZDUyMjdhMy1iY2ZkLTRjZjAtYTdiNi0zOTk4MzVhMDg1NjYifQ.eyJpYXQiOjE2ODAxNjA3NDYsImp0aSI6IjkzM2U4ZmZiLTg2YmMtNDM2OS05YTc0LWZiYmY2ZWU4YzQ4OSIsImlzcyI6Imh0dHBzOi8vc3NvLnJlZGhhdC5jb20vYXV0aC9yZWFsbXMvcmVkaGF0LWV4dGVybmFsIiwiYXVkIjoiaHR0cHM6Ly9zc28ucmVkaGF0LmNvbS9hdXRoL3JlYWxtcy9yZWRoYXQtZXh0ZXJuYWwiLCJzdWIiOiJmOjUyOGQ3NmZmLWY3MDgtNDNlZC04Y2Q1LWZlMTZmNGZlMGNlNjpyY2xlbWVudC1yZWRoYXQuY29tIiwidHlwIjoiT2ZmbGluZSIsImF6cCI6ImNsb3VkLXNlcnZpY2VzIiwibm9uY2UiOiI4OWU2ZmY4Zi1kNmUxLTRjMDMtOGQwNy0yMDg3MmZjNDhiYTQiLCJzZXNzaW9uX3N0YXRlIjoiZTE5ZWI2MWYtMTUwYi00YThlLWIyZjktZDAwMmE2ZGZjZjM3Iiwic2NvcGUiOiJvcGVuaWQgYXBpLmlhbS5zZXJ2aWNlX2FjY291bnRzIGFwaS5pYW0ub3JnYW5pemF0aW9uIG9mZmxpbmVfYWNjZXNzIiwic2lkIjoiZTE5ZWI2MWYtMTUwYi00YThlLWIyZjktZDAwMmE2ZGZjZjM3In0.fcWZTj6XCZKUS9QgWry_UoE_7pBlhQLUYa0ra7fprXE",
+        "satellite_manifest_url": "https://satellite-manifest.s3.amazonaws.com/manifest_RH_Satellite_20230330T094553Z.zip"
     },
     "builders": [{
         "type": "amazon-ebs",
@@ -28,7 +28,7 @@
         "source_ami_filter": {
             "filters": {
                 "virtualization-type": "hvm",
-                "name": "RHEL-8.7.*_HVM-*-x86_64-2-Hourly2-GP2",
+		"name": "RHEL-8.7.*_HVM-*-x86_64-*",
                 "root-device-type": "ebs"
             },
             "owners": ["309956199498"],
