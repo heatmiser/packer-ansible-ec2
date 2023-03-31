@@ -9,6 +9,7 @@ set -ex
 SCRIPT_DIR=$(cd -- "$(dirname -- ${BASH_SOURCE[0]})" &> /dev/null && pwd)
 
 ## VERSIONS
+
 VER_ANSIBLE_CORE="2.11.7"
 VER_PYTHON="3.9"
 
@@ -18,11 +19,11 @@ VER_PYTHON="3.9"
 BOOL_GPG_VERIFY_AWS_CLI=1
 
 ## COMMANDS
+
 CMD_PKG_MGR="dnf"
 CMD_PYTHON="python${VER_PYTHON}"
 
 ## URLS
-
 # https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html
 URL_AWS_CLI_PKG="https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip"
 
@@ -39,21 +40,21 @@ PKG_PYTHON_ANSIBLE_CORE="ansible-core==${VER_ANSIBLE_CORE}"
 PKG_PYTHON_JMESPATH="jmespath"
 PKG_PYTHON_WHEEL="wheel"
 
-# Directories/Files/Paths
+## DIRS/FILES/PATHS
+
 TMP_DIR="/tmp"
 TMP_MANIFEST_PATH="${TMP_DIR}/manifest.zip"
 REQUIREMENTS_GALAXY="${TMP_DIR}/requirements.yml"
 
-# GPG signatures
-GPG_AWS_PUB_SIGNATURE_FILE="${SCRIPT_DIR}/aws_pub.pgp"
-
 export PYVENV_PROJDIR="${TMP_DIR}/ansible_venv"
 
-# CREDENTIALS
+## CREDENTIALS
+#
 # AWS_ACCESS_KEY_ID provided as an environment variable by packer
 # AWS_SECRET_ACCESS_KEY provided as an environment variable by packer
 
-# Strings
+## STRINGS
+
 STR_SED_PLACEHOLDER="AABBccddeeff112233gghh"
 
 ### FUNCTIONS ###############################################################
