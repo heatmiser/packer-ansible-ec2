@@ -10,7 +10,7 @@
         "red_hat_activation_key": "AK-Sat",
         "red_hat_org_id": "_YOUR_RED_HAT_ORG_ID_",
         "ah_api_token": "_YOUR_RED_HAT_AUTOMATION_HUB_API_TOKEN_",
-	"download_protocol": "curl",
+	"download_program": "curl",
 	"satellite_manifest_url": "_HTTP_OR_S3_ADDRESS_"
     },
     "builders": [{

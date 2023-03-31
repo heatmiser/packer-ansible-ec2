@@ -196,7 +196,7 @@ download_manifest()
  # - "curl" | Use [curl] to download an asset over http/s
  # - ""     | default will use [curl]
  #
- case "${download_protocol}" in
+ case "${download_program}" in
   "s3")
    copy_from_s3 "${satellite_manifest}" "${TMP_MANIFEST_PATH}"
    ;;
