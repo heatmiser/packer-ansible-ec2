@@ -26,8 +26,12 @@ Configuration
 * `red_hat_activation_key`: Red Hat Activation key that contains valid subscriptions for products being installed e.g. Red Hat Satellite
 * `red_hat_org_id`: Red Hat organization ID for account that owns above activation key
 * `ah_api_token`: [Red Hat Automation Hub API token](https://console.redhat.com/ansible/automation-hub/token)
-* `satellite_manifest_url`: Red Hat product subscription manifest location accessible by the temporary EC2 builder instance (if required by product installation and/or configuration). Generate manifest [here](https://access.redhat.com/management/subscription_allocations) and then move to specified URL location
+* `download_program`: Can be either `s3` or `curl` (http/s). If anything but `s3`, it defaults to `curl`.
+* `satellite_manifest_url`: Red Hat product subscription manifest location accessible by the temporary EC2 builder instance (if required by product installation and/or configuration). Generate manifest [here](https://access.redhat.com/management/subscription_allocations) and then move to specified URL location. Can either be an s3 or http/s address. See `download_program` option above.
 
 EBS AMI Build
 -------------
-packer build -machine-readable packer-build.json | tee build_artifact-$(date +%Y-%m-%d.%H%M).txt
+Use either method:
+* Run the `./build.sh` script. It will do prechecks and use `nohup` to ensure the build continues if you get disconnected. It will also monitor the fork using `tail -f log`.
+* You can also type `packer build -machine-readable packer-build.json | tee build_artifact-$(date +%Y-%m-%d.%H%M).txt` if you like to live dangerously. If you get disconnected, the build will fail. No prechecks with this method either.
+
