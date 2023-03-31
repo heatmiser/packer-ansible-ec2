@@ -46,15 +46,15 @@ CONFIGURE
    
    `git clone https://github.com/heatmiser/packer-ansible-ec2`
 
-2) Change to the `packer-ansible-ec2` directory and perform a ``git checkout`` to build the branch of interest
+2) Change to the packer-ansible-ec2 directory and perform a git checkout to build the branch of interest
    
    `cd packer-ansible-ec2 && git checkout satellite-6.12`
    
-3) Rename the `packer-build-template.json` to `packer-build.json` to make a company of the template
+3) Rename the packer-build-template.json to packer-build.json to make a company of the template
 
     `cp --no-clobber packer-build-template.json packer-build.json`
 
-4) Edit the `packer-build.json` settings file and replace the settings so that it works for your implementation. See below.
+4) Edit the packer-build.json settings file and replace the settings so that it works for your implementation. See below.
 
     `vim packer-build.json || vi packer-build.json || nano packer-build.json`
 
