@@ -243,7 +243,7 @@ dnf_install_packages "${PKG_DNF_DEV_GROUP}" "$PKG_DNF_PYTHON"
 # create the python virtual environment
 setup_python_venv
 
-# Upgrade pip and install wheel python module
+# Install wheel, ansible-core, and jmespath python modules
 pip_install_packages \
   "${PKG_PYTHON_WHEEL}" \
   "${PKG_PYTHON_ANSIBLE_CORE}" \
