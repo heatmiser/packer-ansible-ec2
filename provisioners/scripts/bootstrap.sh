@@ -188,7 +188,7 @@ copy_from_s3()
 download_manifest()
 {
  # Perform manifest download based on value supplied to 
- # [download protocol]
+ # [download_program]
  #
  # Valid values:
  #
