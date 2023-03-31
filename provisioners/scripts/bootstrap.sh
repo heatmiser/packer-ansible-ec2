@@ -6,8 +6,6 @@ set -ex
 
 ### VARIABLES ###############################################################
 
-SCRIPT_DIR=$(cd -- "$(dirname -- ${BASH_SOURCE[0]})" &> /dev/null && pwd)
-
 ## VERSIONS
 
 VER_ANSIBLE_CORE="2.11.7"
@@ -15,17 +13,19 @@ VER_PYTHON="3.9"
 
 ## TOGGLES
 
+# Should we verify the aws cli zip package using gnupg?
 # 1 for yes, 0 for no
 BOOL_GPG_VERIFY_AWS_CLI=1
+
+## URLS
+
+# https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html
+URL_AWS_CLI_PKG="https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip"
 
 ## COMMANDS
 
 CMD_PKG_MGR="dnf"
 CMD_PYTHON="python${VER_PYTHON}"
-
-## URLS
-# https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html
-URL_AWS_CLI_PKG="https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip"
 
 ## PACKAGES
 
@@ -49,7 +49,7 @@ REQUIREMENTS_GALAXY="${TMP_DIR}/requirements.yml"
 export PYVENV_PROJDIR="${TMP_DIR}/ansible_venv"
 
 ## CREDENTIALS
-#
+
 # AWS_ACCESS_KEY_ID provided as an environment variable by packer
 # AWS_SECRET_ACCESS_KEY provided as an environment variable by packer
 
@@ -59,25 +59,29 @@ STR_SED_PLACEHOLDER="AABBccddeeff112233gghh"
 
 ### FUNCTIONS ###############################################################
 
-# Install Linux packages
+# Install DNF packages
 dnf_install_packages()
 {
- # no quotes on ${@} for variable expansion
- _dnf install $@
+  # no quotes on ${@} for variable expansion
+  # shellcheck disable=SC2068
+  _dnf install $@
 }
 
+# Remove DNF packages
 dnf_remove_packages()
 {
- # no quotes on ${@} for variable expansion
- _dnf remove $@
+  # no quotes on ${@} for variable expansion
+  # shellcheck disable=SC2068
+  _dnf remove $@
 }
 
-# dnf package manager
+# DNF package manager function. Takes inputs from dnf_*_packages functions
 _dnf()
 {
-  if [[ ! -z "$@" ]];
+  if [[ -n "${*}" ]];
   then
     # no quotes on ${@:2} as need to have variable expansion
+    # shellcheck disable=SC2068
     sudo "${CMD_PKG_MGR}" -y "${1}" ${@:2}
   fi
 }
@@ -86,19 +90,22 @@ _dnf()
 # Loop, so that each argument can specify parameters to pip
 pip_install_packages()
 {
-  if [[ ! -z "${@}" ]];
+  if [[ -n "${*}" ]];
    then
    for pip_pkg in "${@}"
    do
      # don't use quotes around ${pip_pkg} so the string is expanded to args
-     "${CMD_PYTHON}" -m pip install ${pip_pkg}
+     # shellcheck disable=SC2086
+     "${CMD_PYTHON}" -m pip install ${pip_pkg} 
    done
   fi
 }
 
+# Import aws pgp public signature
 function import_aws_pgp_pub_sig()
 {
-AWS_PGP_PUBLIC_SIGNATURE=$(cat << EOF
+  # AWS PGP public signature to verify aws cli
+  AWS_PGP_PUBLIC_SIGNATURE=$(cat << EOF
 -----BEGIN PGP PUBLIC KEY BLOCK-----
 
 mQINBF2Cr7UBEADJZHcgusOJl7ENSyumXh85z0TRV0xJorM2B/JL0kHOyigQluUG
@@ -154,6 +161,12 @@ gpg_check_file()
   echo "OK: AWS gpg signature was successfully verified on awscliv2.zip"
 }
 
+# Function to copy from s3.
+#   - Downloads aws cli
+#   - Downloads zip dnf pkg
+#   - Verifies aws cli was signed by aws using pgp signature
+#   - Copies manifest from s3
+#   - Removes zip dnf pkg
 copy_from_s3()
 {
    AWS_CLI_ZIP_ABS_PATH="${TMP_DIR}/awscliv2.zip"
@@ -162,7 +175,7 @@ copy_from_s3()
    curl "${URL_AWS_CLI_PKG}" -o "${AWS_CLI_ZIP_ABS_PATH}"
 
    # Test gpg/pgp signature
-   if [[ "${BOOL_GPG_VERIFY_AWS_CLI}" -ne 0 ]];
+   if [[ "${BOOL_GPG_VERIFY_AWS_CLI}" -ne 0 ]]
    then
      # Download the pgp signature file from aws
      curl "${URL_AWS_CLI_PKG}.sig" -o "${AWS_CLI_ZIP_ABS_PATH}.sig"
@@ -178,14 +191,19 @@ copy_from_s3()
    unzip "${AWS_CLI_ZIP_ABS_PATH}" -d "${TMP_DIR}" | grep "/install"
    sudo "${TMP_DIR}/aws/install" -i "${TMP_DIR}" -b "${TMP_DIR}/bin"
 
+   # Use s3 cp to copy the file
    "${TMP_DIR}/bin/aws" s3 cp "${1}" "${2}"
+
+   # Echo details of the file to the packer log
    sha256sum "${2}"
    file "${2}"
    ls -al "${2}"
    
+   # zip is not needed anymore
    dnf_remove_packages "${PKG_DNF_ZIP}"
 }
 
+# Function to download the manifest.
 download_manifest()
 {
  # Perform manifest download based on value supplied to 
@@ -197,6 +215,7 @@ download_manifest()
  # - "curl" | Use [curl] to download an asset over http/s
  # - ""     | default will use [curl]
  #
+ # shellcheck disable=SC2154
  case "${download_program}" in
   "s3")
    copy_from_s3 "${satellite_manifest}" "${TMP_MANIFEST_PATH}"
@@ -207,6 +226,7 @@ download_manifest()
  esac
 }
 
+# Setup the python venv
 setup_python_venv()
 {
  # Install pip and create venv
@@ -214,9 +234,11 @@ setup_python_venv()
  "${CMD_PYTHON}" -m venv "${PYVENV_PROJDIR}"
  "${CMD_PYTHON}" -m pip install --upgrade pip
   # load the python venv
+  # shellcheck disable=SC1091
   source "${PYVENV_PROJDIR}/bin/activate"
 }
 
+# Clean the bash history
 cleanup()
 {
   # Purge history 
@@ -225,34 +247,43 @@ cleanup()
 
 ### MAIN ####################################################################
 
-# Replace string placeholder with supplied API token
-echo "Turning logging off to sed RH API token"
-set +x
-sed -i "s/${STR_SED_PLACEHOLDER}/${api_token}/g" ~/.ansible.cfg
-set -x
-echo "Logging back on"
+main()
+{
+  # Replace string placeholder with supplied API token
+  echo "Turning logging off to sed RH API token"
+  set +x
+  # shellcheck disable=SC2154
+  sed -i "s/${STR_SED_PLACEHOLDER}/${api_token}/g" ~/.ansible.cfg
+  set -x
+  echo "Logging back on"
 
-# download the Satellite manifest supplied in the packer-build.json file
-download_manifest
+  # download the Satellite manifest supplied in the packer-build.json file
+  download_manifest
 
-# Install python and required packages
-dnf_install_packages "${PKG_DNF_DEV_GROUP}" "$PKG_DNF_PYTHON"
+  # Install python and required packages
+  dnf_install_packages "${PKG_DNF_DEV_GROUP}" "${PKG_DNF_PYTHON}"
 
-# RC: commented out - venv will create dir if does not exist
-# mkdir -p "${PYVENV_PROJDIR}"
+  # RC: commented out - venv will create dir if does not exist
+  # mkdir -p "${PYVENV_PROJDIR}"
 
-# create the python virtual environment
-setup_python_venv
+  # create the python virtual environment
+  setup_python_venv
 
-# Install wheel, ansible-core, and jmespath python modules
-pip_install_packages \
-  "${PKG_PYTHON_WHEEL}" \
-  "${PKG_PYTHON_ANSIBLE_CORE}" \
-  "${PKG_PYTHON_JMESPATH}"
+  # Install wheel, ansible-core, and jmespath python modules
+  pip_install_packages \
+    "${PKG_PYTHON_WHEEL}" \
+    "${PKG_PYTHON_ANSIBLE_CORE}" \
+    "${PKG_PYTHON_JMESPATH}"
 
-# Install collects from requirements.yml
-ansible-galaxy collection install -r "${REQUIREMENTS_GALAXY}" --force
+  # Install collects from requirements.yml
+  ansible-galaxy collection install -r "${REQUIREMENTS_GALAXY}" --force
 
-# Remove packages not needed after bootstrap and purge history
-cleanup
+  # Remove packages not needed after bootstrap and purge history
+  cleanup
+}
 
+### BOILERPLATE #############################################################
+
+main
+
+### EOF #####################################################################
