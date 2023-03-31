@@ -6,33 +6,36 @@ Automated image builds for AWS EC2
 
 This project aims to simplify the process of **building golden images on AWS** through **automation**.
 
-[Packer](https://www.packer.io) and [Ansible](https://github.com/ansible/ansible) are used in combination, with `Packer` utilizing the [the EBS AMI builder](https://www.packer.io/plugins/builders/amazon/ebs) to construct a golden AMI. This involves:  
+[Packer](https://www.packer.io) and [Ansible](https://github.com/ansible/ansible) are used in combination. `Packer` utilizies the [the EBS AMI builder](https://www.packer.io/plugins/builders/amazon/ebs) to construct a golden AMI.
 
-* Provisoning an EC2 instance from an initial source AMI
-* Configuring it through user-provided automation (in this project's case, Ansible)
-* Imaging a golden AMI from the instance storage after powering the instance down
+This involves:  
+
+* _Provisoning_ an EC2 instance from an initial source AMI
+* _Configuring_ it through user-provided automation (in this project's case, Ansible)
+* _Imaging_ a golden AMI from the instance storage after powering the instance down
 
 All of this is carried out within the AWS account specified by the user's credentials by supplying the environment variables:
 
-* `AWS_ACCESS_KEY_ID=AKID.....` 
-* `AWS_SECRET_ACCESS_KEY=Abcid9.....`
+* `export AWS_ACCESS_KEY_ID=AKID.....` 
+* `export AWS_SECRET_ACCESS_KEY=Abcid9.....`
 
 The builder generates temporary keypairs, security group rules, and other resources that offer temporary access to the instance while the image is being created or customized.
 
 Requirements
 ------------
 
-* Linux or MacOS system, with `git` and `python` and `bash` installed on the machine you are using to run the build script and packer. All other software packages will be installed as needed on the image build via the bootstrap and packer, and Ansible scripts.
+* Linux or MacOS system
+* `git` and `python` installed
+* `bash` shell installed to run `provisioner/script/bootstrap.sh`  
+  The bootstrap script using _bashisms_ that are not POSIX friendly).  
+  If someone would like to create a POSIX friendly `bootstrap.sh`, please submit a PR.
 * AWS account
   * account `AWS access key ID`
   * account `AWS secret access key`
   * existing AWS infrastructure
     * exiting `vpc`
     * existing **publically accessable** `subnet` within the `vpc`
-    * **NOTE**: If you wish to create the AWS infrastructure as code, then you can use this project to build our your AWS infrastructure quickly using IaC using Ansible:
-  
-            Smart Management AWS: https://github.com/rclements-redhat/smart-management-aws
-
+    * **NOTE**: If you wish to create the AWS infrastructure as code, then you can use [this project](https://github.com/rclements-redhat/) to build your AWS infrastructure quickly using IaC using Ansible.  
   * Packer from https://www.packer.io/downloads
   * Note: Temporary keypairs and security group rules will secure the communication stream
   
