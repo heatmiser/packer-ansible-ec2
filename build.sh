@@ -24,10 +24,14 @@ BUILD_FILE="build_artifact-$(date +%Y-%m-%d.%H%M).txt"
 
 function log()
 {
-  NORMAL_PRE="${DARK_GREY}[${GREEN}*${DARK_GREY}]${RESET}"
-  ERROR_PRE="${DARK_GREY}[${RED}*${DARK_GREY}]${RESET}"
-
-  echo -e "${NORMAL_PRE} ${1}"
+	if [[ "${1}" == "error" ]]
+	then
+    PRE="${DARK_GREY}[${RED}*${DARK_GREY}]${RESET}"
+		echo -e "${PRE} ${2}"
+	else
+    PRE="${DARK_GREY}[${GREEN}*${DARK_GREY}]${RESET}"
+    echo -e "${PRE} ${1}"
+  fi
 }
 
 echo -ne "
@@ -39,6 +43,24 @@ GitHub: ${RESET}${CYAN}https://github.com/heatmiser/packer-ansible-ec2${DARK_GRE
 Build log: ${CYAN}${BUILD_FILE}${DARK_GREY}
 -------------------------------------------------------------------
 ${RESET}"
+
+# Check AWS creds
+
+if [[ -z "${AWS_ACCESS_KEY_ID}" ]]; then
+	log "error" "AWS_ACCESS_KEY_ID is not defined."
+	log "error" \
+	 	  "Type: ${CYAN}export ${CYAN}AWS_ACCESS_KEY_ID${DARK_GREY}=${CYAN}YOURACCESSKEYHERE${NORMAL}"
+	echo -e "${DARK_GREY}"
+	exit 1
+fi
+
+if [[ -z "${AWS_SECRET_ACCESS_KEY}" ]]; then
+	log "error" "AWS_SECRET_ACCESS_KEY is not defined."
+	log "error" \
+	 	  "Type: ${CYAN}export ${CYAN}AWS_SECRET_ACCESS_KEY${DARK_GREY}=${CYAN}YOURSECRETKEYHERE${NORMAL}"
+	echo -e "${DARK_GREY}"
+	exit 1
+fi
 
 log "Starting packer"
 
@@ -52,22 +74,24 @@ setsid --fork \
 # create a symbolic link to the build file for convience
 ln -sf "${BUILD_FILE}" log
 
-log "Created symbolic link ${BLUE}log ${DARK_GREY}-> ${BLUE}${BUILD_FILE}"
+log "Created symbolic link ${GREEN}log ${DARK_GREY}-> ${GREEN}${BUILD_FILE}"
 
 log "You may press ${CYAN}CTRL-C${NORMAL} at any time and it will not cancel packer"
 log "If you lose connection or logout, the build will continue."
-log "To watch the log again just type: ${BLUE}tail -f log${RESET}"
-log "To stop packer, type: ${BLUE}pkill -15 packer${NORMAL}"
+log "To watch the log again just type: ${GREEN}tail -f log${RESET}"
+log "To stop packer, type: ${RED}pkill -15 packer${NORMAL}"
 
 # monitor contents of the log file in real-time
 # Ctrl-C out of tail will _NOT_ send SIGINT to packer since it's forked
 # into a different group
-adf
-log "Watching the output using: ${BLUE}${BOLD}tail -f log${RESET}"
+
 
 echo -e "${DARK_GREY}-------------------------------------------------------------------"
 echo -e "${RESET}"
 
+echo -e "Will start watching the output using: ${BLUE}${BOLD}tail -f log${RESET} in 5 seconds"
+
+sleep 5
 tail -f log
 
 
