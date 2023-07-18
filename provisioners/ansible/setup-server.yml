@@ -121,6 +121,13 @@
       state: latest
     tags:
       - pre_task
+  
+  - name: install podman package
+    yum:
+      name: podman
+      state: latest
+    tags:
+      - sotware
 
   - name: install chrony
     include_role:
