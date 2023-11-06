@@ -2,7 +2,7 @@
     "variables": {
         "aws_access_key": "{{env `AWS_ACCESS_KEY_ID`}}",
         "aws_secret_key": "{{env `AWS_SECRET_ACCESS_KEY`}}",
-        "ami_name": "Satellite 6.12 {{isotime `2006-01-02-150405`}}",
+        "ami_name": "Satellite 6.13 {{isotime `2006-01-02-150405`}}",
         "aws_region": "us-east-2",
         "ssh_username": "ec2-user",
         "vpc_id": "EXISTING-VPC-ID",
@@ -28,7 +28,7 @@
         "source_ami_filter": {
             "filters": {
                 "virtualization-type": "hvm",
-                "name": "RHEL-8.7.*_HVM-*-x86_64-2-Hourly2-GP2",
+                "name": "RHEL-8.8.*_HVM-*-x86_64-2-Hourly2-GP2",
                 "root-device-type": "ebs"
             },
             "owners": ["309956199498"],
