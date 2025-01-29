@@ -89,11 +89,10 @@
   - name: installer repos
     community.general.rhsm_repository:
       name:
-        - rhel-8-for-x86_64-baseos-rpms
-        - rhel-8-for-x86_64-appstream-rpms
-        - satellite-6.13-for-rhel-8-x86_64-rpms
-        - satellite-maintenance-6.13-for-rhel-8-x86_64-rpms
-        - ansible-2.9-for-rhel-8-x86_64-rpms
+        - rhel-9-for-x86_64-baseos-rpms
+        - rhel-9-for-x86_64-appstream-rpms
+        - satellite-6.16-for-rhel-9-x86_64-rpms
+        - satellite-maintenance-6.16-for-rhel-9-x86_64-rpms
       state: enabled
       purge: yes
     tags:
@@ -153,6 +152,7 @@
     vars:
       satellite_installer_scenario: satellite
       satellite_installer_options:
+          - "--skip-checks-i-know-better"
           - "--foreman-initial-admin-password {{ sat_pass }}"
           - "--enable-foreman-plugin-remote-execution-cockpit"
       satellite_installer_command: satellite-installer
@@ -396,3 +396,4 @@
       path: "{{ item.path }}"
       state: absent
     with_items: "{{ ssh_host_files_to_delete.files }}"
+...

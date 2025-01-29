@@ -82,4 +82,4 @@ satellite_products:
       - name: Foreman Client CentOS 9
         url: https://yum.theforeman.org/client/latest/el9/x86_64/
         content_type: yum
-
+...
