@@ -89,10 +89,10 @@
   - name: installer repos
     community.general.rhsm_repository:
       name:
-        - rhel-9-for-x86_64-baseos-rpms
-        - rhel-9-for-x86_64-appstream-rpms
-        - satellite-6.16-for-rhel-9-x86_64-rpms
-        - satellite-maintenance-6.16-for-rhel-9-x86_64-rpms
+        - rhel-{{ ansible_distribution_major_version }}-for-x86_64-baseos-rpms
+        - rhel-{{ ansible_distribution_major_version }}-for-x86_64-appstream-rpms
+        - satellite-6.16-for-rhel-{{ ansible_distribution_major_version }}-x86_64-rpms
+        - satellite-maintenance-6.16-for-rhel-{{ ansible_distribution_major_version }}-x86_64-rpms
       state: enabled
       purge: yes
     tags:
@@ -106,7 +106,7 @@
       - '"Enabling module streams" in result.stdout'
     loop: "{{ dnf_module_list|list }}"
     when:
-      - ansible_distribution_major_version >= '8'
+      - ansible_distribution_major_version == '8'
       - dnf_module_list|length > 0 
 
   - name: Update all packages
@@ -237,13 +237,15 @@
   #    path: /usr/bin/python3.6
   #    link: /usr/bin/python
   #    state: present
-  ### Couldn't get alternative module to work correctly, so reverting to 
+  ### Couldn't get alternatives module to work correctly, so reverting to 
     command: >-
       alternatives --set python /usr/bin/python3
     environment:
       HOME: /root
+    when:
+      - ansible_distribution_major_version == '8'
     tags:
-     - post_software
+      - post_software
 
   - name: Create gpg key directory for importing keys
     file:
